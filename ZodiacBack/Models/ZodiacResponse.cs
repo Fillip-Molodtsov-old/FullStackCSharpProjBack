@@ -46,7 +46,7 @@ namespace ZodiacBack.Models
                 list.Add("Людина не може жити більше 135 років");
             }else if (Age <= 0)
             {
-                list.Add("Вам не може бути 0 або меньше років");
+                list.Add("Схоже Ви народилися в майбутньому");
             }
 
             return list;
