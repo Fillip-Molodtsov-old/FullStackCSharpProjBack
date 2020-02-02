@@ -5,5 +5,9 @@
         <RootNamespace>ZodiacBack</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\ZodiacBack.Core\ZodiacBack.Core.csproj" />
+    </ItemGroup>
+
 
 </Project>

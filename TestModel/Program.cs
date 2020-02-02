@@ -9,10 +9,12 @@ namespace TestModel
         {
             ZodiacResponse zr = new ZodiacResponse("2000-01-25");
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Console.WriteLine(zr.WestSign);
-            Console.WriteLine(zr.IsBirthday);
-            Console.WriteLine(zr.EastSign);
-            Console.WriteLine(zr.SpecialMessages);
+            foreach (var v in zr.ErrorMessages)
+            {
+                Console.WriteLine(v);
+            }
+
+            Console.WriteLine(zr.InfoBirthday.Age);
         }
     }
 }

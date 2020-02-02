@@ -39,6 +39,19 @@
         <e p="Startup.cs" t="Include" />
         <e p="ZodiacBack.csproj" t="IncludeRecursive" />
       </e>
+      <e p="ZodiacBack.Core" t="IncludeRecursive">
+        <e p="AbstractCustomResponse.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="InfoBirthday.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="ZodiacBack.Core.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="ZodiacBack.Core.csproj" t="IncludeRecursive" />
+      </e>
       <e p="ZodiacBack.sln" t="IncludeFlat" />
     </e>
     <e p="C:\Users\great\.Rider2019.3\config\scratches" t="IncludeRecursive" />
