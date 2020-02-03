@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-using ZodiacBack.Core;
+using ZodiacBack.Core.Models;
 
-namespace ZodiacBack.Models
+namespace ZodiacBack.Core.CustomResponses
 {
     public class ZodiacResponse : AbstractCustomResponse
     {

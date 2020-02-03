@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ZodiacBack.Models;
-using ZodiacBack.Models.HttpModels;
+using ZodiacBack.Core.CustomResponses;
+using ZodiacBack.Core.HttpModels;
 
 namespace ZodiacBack.Controllers
 {

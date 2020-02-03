@@ -1,22 +1,19 @@
 ﻿using System.Collections.Generic;
-using ZodiacBack.Core;
-using ZodiacBack.Models.HttpModels;
+using ZodiacBack.Core.HttpModels;
+using ZodiacBack.Core.Models;
 
-namespace ZodiacBack.Models
+namespace ZodiacBack.Core.CustomResponses
 {
     
     public class PersonResponse: AbstractCustomResponse
     {
         public Person Person { get; }
-        public InfoBirthday InfoBirthday { get; }
 
         public PersonResponse(PersonHttpBody person)
         {
-            // var zodiacResponse = new ZodiacResponse(Person.Birthday);
-            // InfoBirthday = zodiacResponse.InfoBirthday;
-            // ErrorMessages = zodiacResponse.ErrorMessages;
-            // SpecialMessages = zodiacResponse.SpecialMessages;
-            // TODO create person class  and finish backend task
+            Person = new Person(person);
+            ErrorMessages = Person.ZodiacResponse.ErrorMessages;
+            SpecialMessages = Person.ZodiacResponse.SpecialMessages;
         }
 
         protected sealed override IEnumerable<string> GetErrorMessages()

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace ZodiacBack.Core
+namespace ZodiacBack.Core.Models
 {
     public class InfoBirthday
     {

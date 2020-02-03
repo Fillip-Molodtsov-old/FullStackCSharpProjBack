@@ -1,4 +1,4 @@
-﻿namespace ZodiacBack.Models.HttpModels
+﻿namespace ZodiacBack.Core.HttpModels
 {
     public class PersonHttpBody
     {

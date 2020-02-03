@@ -1,5 +1,5 @@
 ﻿using System;
-using ZodiacBack.Models;
+using ZodiacBack.Core.CustomResponses;
 
 namespace TestModel
 {

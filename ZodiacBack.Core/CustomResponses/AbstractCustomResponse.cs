@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ZodiacBack.Core
+namespace ZodiacBack.Core.CustomResponses
 {
     public abstract class AbstractCustomResponse
     {
