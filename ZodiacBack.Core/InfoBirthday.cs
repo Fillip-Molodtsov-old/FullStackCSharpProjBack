@@ -13,6 +13,8 @@ namespace ZodiacBack.Core
 
         public bool IsBirthday => CheckIfBirthday();
 
+        public bool IsAdult => CheckIfAdult();
+
         public int Age => CalculateAge();
 
         public InfoBirthday(string birthday)
@@ -39,6 +41,11 @@ namespace ZodiacBack.Core
         {
             DateTime now = DateTime.Now;
             return BirthdayDate.Day == now.Day && BirthdayDate.Month == now.Month;
+        }
+        
+        private bool CheckIfAdult()
+        {
+            return Age >= 18 ? true : false;
         }
         
         private string CalculateEastSign()

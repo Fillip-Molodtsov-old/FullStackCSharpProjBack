@@ -20,9 +20,14 @@
         <e p="appsettings.json" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="Controllers" t="Include">
+          <e p="PersonController.cs" t="Include" />
           <e p="Zodiac.cs" t="Include" />
         </e>
         <e p="Models" t="Include">
+          <e p="HttpModels" t="Include">
+            <e p="PersonHttpBody.cs" t="Include" />
+          </e>
+          <e p="PersonResponse.cs" t="Include" />
           <e p="ZodiacResponse.cs" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive">
@@ -50,6 +55,7 @@
             </e>
           </e>
         </e>
+        <e p="Person.cs" t="Include" />
         <e p="ZodiacBack.Core.csproj" t="IncludeRecursive" />
       </e>
       <e p="ZodiacBack.sln" t="IncludeFlat" />
