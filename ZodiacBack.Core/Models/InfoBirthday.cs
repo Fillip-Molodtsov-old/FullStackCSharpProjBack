@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 
 namespace ZodiacBack.Core.Models
 {
@@ -17,17 +16,9 @@ namespace ZodiacBack.Core.Models
 
         public int Age => CalculateAge();
 
-        public InfoBirthday(string birthday)
+        public InfoBirthday(DateTime birthday)
         {
-            var date = DateTime.TryParse(birthday,
-                CultureInfo.InvariantCulture, 
-                DateTimeStyles.None, out var res);
-            if (!date)
-            {
-                throw new ArgumentException($"The date {birthday} is not in the right format yyyy-mm-dd");
-            }
-
-            BirthdayDate = res;
+            BirthdayDate = birthday;
         }
         
         private int CalculateAge()

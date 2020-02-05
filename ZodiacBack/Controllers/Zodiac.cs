@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -18,7 +19,7 @@ namespace ZodiacBack.Controllers
         }
 
         [HttpGet("{birthday}")]
-        public async Task<ActionResult<ZodiacResponse>> Get(string birthday)
+        public async Task<ActionResult<ZodiacResponse>> Get(DateTime birthday)
         {
             var response = await Task.Run( () => new ZodiacResponse(birthday));
 

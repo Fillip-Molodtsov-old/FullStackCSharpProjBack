@@ -12,18 +12,9 @@ namespace ZodiacBack.Core.CustomResponses
         public InfoBirthday InfoBirthday { get; }
 
 
-        public ZodiacResponse(string birthday)
+        public ZodiacResponse(DateTime birthday)
         {
-            try
-            {
-                InfoBirthday = new InfoBirthday(birthday);
-            }
-            catch (Exception e)
-            {
-                ErrorMessages = new List<string>() {e.Message};
-                return;
-            }
-
+            InfoBirthday = new InfoBirthday(birthday);
             ErrorMessages = GetErrorMessages();
             SpecialMessages = GetSpecialMessages();
         }

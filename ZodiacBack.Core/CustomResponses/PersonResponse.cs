@@ -12,18 +12,18 @@ namespace ZodiacBack.Core.CustomResponses
         public PersonResponse(PersonHttpBody person)
         {
             Person = new Person(person);
-            ErrorMessages = Person.ZodiacResponse.ErrorMessages;
-            SpecialMessages = Person.ZodiacResponse.SpecialMessages;
+            ErrorMessages = GetErrorMessages();
+            SpecialMessages = GetSpecialMessages();
         }
 
         protected sealed override IEnumerable<string> GetErrorMessages()
         {
-            return new List<string>();
+            return Person.ZodiacResponse.ErrorMessages;
         }
 
         protected sealed override IEnumerable<string> GetSpecialMessages()
         {
-            return new List<string>();
+            return Person.ZodiacResponse.SpecialMessages;
         }
     }
 }
