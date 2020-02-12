@@ -44,6 +44,10 @@
           <e p="PersonResponse.cs" t="Include" />
           <e p="ZodiacResponse.cs" t="Include" />
         </e>
+        <e p="Exceptions" t="Include">
+          <e p="AgeValidationException.cs" t="Include" />
+          <e p="EmailDomainValidation.cs" t="Include" />
+        </e>
         <e p="HttpModels" t="Include">
           <e p="PersonHttpBody.cs" t="Include" />
         </e>

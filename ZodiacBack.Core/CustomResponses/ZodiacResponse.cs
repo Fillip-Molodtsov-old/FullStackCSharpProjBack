@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
+using ZodiacBack.Core.Exceptions;
 using ZodiacBack.Core.Models;
 
 namespace ZodiacBack.Core.CustomResponses
@@ -23,13 +24,13 @@ namespace ZodiacBack.Core.CustomResponses
         protected sealed override IEnumerable<string> GetErrorMessages()
         {
             var list = new List<string>();
-            if (InfoBirthday.Age > 135)
+            try
             {
-                list.Add("Людина не може жити більше 135 років");
+                ValidateAge();
             }
-            else if (InfoBirthday.Age <= 0)
+            catch (AgeValidationException ex)
             {
-                list.Add("Схоже Ви народилися в майбутньому");
+                list.Add(ex.Message);
             }
 
             return list;
@@ -46,6 +47,18 @@ namespace ZodiacBack.Core.CustomResponses
             }
 
             return messages;
+        }
+
+        private void ValidateAge()
+        {
+            if (InfoBirthday.Age > 135)
+            {
+               throw  new AgeValidationException(InfoBirthday.Age,"Людина не може жити більше 135 років");
+            }
+            else if (InfoBirthday.Age <= 0)
+            {
+                throw  new AgeValidationException(InfoBirthday.Age,"Схоже Ви народилися в майбутньому");
+            }
         }
     }
 }
