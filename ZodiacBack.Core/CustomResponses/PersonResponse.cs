@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using ZodiacBack.Core.Exceptions;
-using ZodiacBack.Core.HttpModels;
 using ZodiacBack.Core.Models;
 
 namespace ZodiacBack.Core.CustomResponses
@@ -8,18 +7,22 @@ namespace ZodiacBack.Core.CustomResponses
     
     public class PersonResponse: AbstractCustomResponse
     {
-        public Person Person { get; }
+        public Person Person { get; set; }
 
-        public PersonResponse(PersonHttpBody person)
+        private ZodiacResponse ZodiacResponse { get; set; }
+
+        public PersonResponse(Person person)
         {
-            Person = new Person(person);
+            Person = person;
+            ZodiacResponse = new ZodiacResponse(Person.Birthday);
+            FillPerson();
             ErrorMessages = GetErrorMessages();
             SpecialMessages = GetSpecialMessages();
         }
 
         protected sealed override IEnumerable<string> GetErrorMessages()
         {
-             var list = new List<string>(Person.ZodiacResponse.ErrorMessages);
+             var list = new List<string>(ZodiacResponse.ErrorMessages);
              try
              {
                 ValidateEmail();
@@ -34,15 +37,24 @@ namespace ZodiacBack.Core.CustomResponses
 
         protected sealed override IEnumerable<string> GetSpecialMessages()
         {
-            return Person.ZodiacResponse.SpecialMessages;
+            return ZodiacResponse.SpecialMessages;
         }
 
         private void ValidateEmail()
         {
-            if (Person.PersonalInfo.Email.Contains(".ru"))
+            if (Person.Email.Contains(".ru"))
             {
                 throw new EmailDomainValidation("ru");
             }
+        }
+
+        private void FillPerson()
+        {
+            Person.EastSign = ZodiacResponse.InfoBirthday.EastSign;
+            Person.WestSign = ZodiacResponse.InfoBirthday.WestSign;
+            Person.IsAdult = ZodiacResponse.InfoBirthday.IsAdult;
+            Person.IsBirthday = ZodiacResponse.InfoBirthday.IsBirthday;
+            Person.Age = ZodiacResponse.InfoBirthday.Age;
         }
     }
 }

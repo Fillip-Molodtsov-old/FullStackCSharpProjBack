@@ -1,17 +1,41 @@
-﻿using ZodiacBack.Core.CustomResponses;
-using ZodiacBack.Core.HttpModels;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace ZodiacBack.Core.Models
 {
     public class Person
     {
-        public PersonHttpBody PersonalInfo { get; set; }
-        public ZodiacResponse ZodiacResponse { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public string Email { get; set; }
+        public DateTime Birthday { get; set; }
 
-        public Person(PersonHttpBody personHttpBody)
+        public string WestSign { get; set; }
+
+        public string EastSign { get; set; }
+
+        public bool IsBirthday { get; set; }
+
+        public bool IsAdult { get; set; }
+        
+        public int Age { get; set; }
+
+        [JsonConstructor]
+        public Person(string name, string surname, string email, DateTime birthday)
         {
-            PersonalInfo = personHttpBody;
-            ZodiacResponse = new ZodiacResponse(PersonalInfo.Birthday);
+            Name = name;
+            Surname = surname;
+            Email = email;
+            Birthday = birthday;
         }
+        
+        public Person(string name, string surname, string email)
+            : this(name,surname,email,DateTime.Parse("2000-01-01")) { }
+
+        public Person(string name, string surname, DateTime birthday) 
+            :this (name,surname,null,birthday){ }
+
+        public Person()
+        { }
     }
 }

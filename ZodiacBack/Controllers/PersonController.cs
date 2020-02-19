@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ZodiacBack.Core.CustomResponses;
-using ZodiacBack.Core.HttpModels;
+using ZodiacBack.Core.Models;
 
 namespace ZodiacBack.Controllers
 {
@@ -19,7 +19,7 @@ namespace ZodiacBack.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<PersonResponse>> Post([FromBody] PersonHttpBody person)
+        public async Task<ActionResult<PersonResponse>> Post([FromBody] Person person)
         {
             var response = await Task.Run(() => new PersonResponse(person));
             if (response.ErrorMessages.Any()) return BadRequest(response.ErrorMessages);

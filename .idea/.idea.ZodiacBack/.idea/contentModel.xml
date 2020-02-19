@@ -48,9 +48,6 @@
           <e p="AgeValidationException.cs" t="Include" />
           <e p="EmailDomainValidation.cs" t="Include" />
         </e>
-        <e p="HttpModels" t="Include">
-          <e p="PersonHttpBody.cs" t="Include" />
-        </e>
         <e p="Models" t="Include">
           <e p="InfoBirthday.cs" t="Include" />
           <e p="Person.cs" t="Include" />
