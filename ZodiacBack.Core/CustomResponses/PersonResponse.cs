@@ -1,38 +1,38 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ZodiacBack.Core.Exceptions;
 using ZodiacBack.Core.Models;
 
 namespace ZodiacBack.Core.CustomResponses
 {
-    
-    public class PersonResponse: AbstractCustomResponse
+    public class PersonResponse : AbstractCustomResponse
     {
         public Person Person { get; set; }
 
         private ZodiacResponse ZodiacResponse { get; set; }
 
-        public PersonResponse(Person person)
+        public PersonResponse(Person person, bool assignNewId)
         {
             Person = person;
             ZodiacResponse = new ZodiacResponse(Person.Birthday);
-            FillPerson();
+            FillPerson(assignNewId);
             ErrorMessages = GetErrorMessages();
             SpecialMessages = GetSpecialMessages();
         }
 
         protected sealed override IEnumerable<string> GetErrorMessages()
         {
-             var list = new List<string>(ZodiacResponse.ErrorMessages);
-             try
-             {
+            var list = new List<string>(ZodiacResponse.ErrorMessages);
+            try
+            {
                 ValidateEmail();
-             }
-             catch (EmailDomainValidation ex)
-             {
-                 list.Add(ex.Message);
-             }
+            }
+            catch (EmailDomainValidation ex)
+            {
+                list.Add(ex.Message);
+            }
 
-             return list;
+            return list;
         }
 
         protected sealed override IEnumerable<string> GetSpecialMessages()
@@ -48,13 +48,14 @@ namespace ZodiacBack.Core.CustomResponses
             }
         }
 
-        private void FillPerson()
+        private void FillPerson(bool assignNewId)
         {
             Person.EastSign = ZodiacResponse.InfoBirthday.EastSign;
             Person.WestSign = ZodiacResponse.InfoBirthday.WestSign;
             Person.IsAdult = ZodiacResponse.InfoBirthday.IsAdult;
             Person.IsBirthday = ZodiacResponse.InfoBirthday.IsBirthday;
             Person.Age = ZodiacResponse.InfoBirthday.Age;
+            if (assignNewId) Person.Id = Guid.NewGuid();
         }
     }
 }

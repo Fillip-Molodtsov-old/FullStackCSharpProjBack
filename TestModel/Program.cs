@@ -1,19 +1,17 @@
 ﻿using System;
-using ZodiacBack.Core.CustomResponses;
+using ZodiacBack.Core.Models;
 
 namespace TestModel
 {
     class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            ZodiacResponse zr = new ZodiacResponse(DateTime.Parse("2000-01-25"));
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
-            foreach (var v in zr.ErrorMessages)
+            var p = new Person();
+            foreach(var field in p.GetType().GetProperties())
             {
-                Console.WriteLine(v);
+                Console.WriteLine();
             }
-            Console.WriteLine(zr.InfoBirthday.Age);
         }
     }
 }
