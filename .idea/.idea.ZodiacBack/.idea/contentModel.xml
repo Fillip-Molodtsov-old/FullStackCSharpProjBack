@@ -47,6 +47,9 @@
           <e p="PersonResponse.cs" t="Include" />
           <e p="ZodiacResponse.cs" t="Include" />
         </e>
+        <e p="Enums" t="Include">
+          <e p="PersonProperties.cs" t="Include" />
+        </e>
         <e p="Exceptions" t="Include">
           <e p="AgeValidationException.cs" t="Include" />
           <e p="EmailDomainValidation.cs" t="Include" />
@@ -63,7 +66,6 @@
             </e>
           </e>
         </e>
-        <e p="PersonProperties.cs" t="Include" />
         <e p="Tools" t="Include">
           <e p="ManipulatingJson.cs" t="Include" />
         </e>

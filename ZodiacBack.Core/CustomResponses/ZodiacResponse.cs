@@ -55,7 +55,7 @@ namespace ZodiacBack.Core.CustomResponses
             {
                throw  new AgeValidationException(InfoBirthday.Age,"Людина не може жити більше 135 років");
             }
-            else if (InfoBirthday.Age <= 0)
+            else if (InfoBirthday.IsFromFuture())
             {
                 throw  new AgeValidationException(InfoBirthday.Age,"Схоже Ви народилися в майбутньому");
             }

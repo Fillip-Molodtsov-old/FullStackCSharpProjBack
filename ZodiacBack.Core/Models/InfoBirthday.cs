@@ -20,6 +20,13 @@ namespace ZodiacBack.Core.Models
         {
             BirthdayDate = birthday;
         }
+
+        public bool IsFromFuture()
+        {
+            var now = int.Parse(DateTime.Now.ToString("yyyyMMdd"));
+            var dob = int.Parse(BirthdayDate.ToString("yyyyMMdd"));
+            return now - dob < 0;
+        }
         
         private int CalculateAge()
         {
@@ -38,7 +45,7 @@ namespace ZodiacBack.Core.Models
         {
             return Age >= 18 ? true : false;
         }
-        
+
         private string CalculateEastSign()
         {
             var year = BirthdayDate.Year;
