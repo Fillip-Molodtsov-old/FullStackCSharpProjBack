@@ -36,19 +36,9 @@ namespace ZodiacBack.Controllers
         public async Task<ActionResult<string>> Save()
         {
             await Task.Run(() => _people.SaveData());
-            return Ok("Данні були збережені");
+            return Ok("Дані були збережені");
         }
-        
-        [Route("filter")]
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Person>>> GetFiltered
-        ([FromQuery(Name = "prop")] PersonProperties property,
-            [FromQuery(Name = "value")] string value)
-        {
-            var response =
-                await Task.Run(() => _people.GetFilteredPeople(property, value,true));
-            return Ok(response);
-        }
+
         [Route("fs")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Person>>> GetFilSorted
@@ -57,13 +47,26 @@ namespace ZodiacBack.Controllers
             [FromQuery(Name = "desc")] bool desc)
         {
             var response =
-                await Task.Run(() => 
-                    _people.GetFilteredAndOrderedPeople(propertyF,value,propertyS,desc));
+                await Task.Run(() =>
+                    _people.GetFilteredAndOrderedPeople(propertyF, value, propertyS, desc));
+            return Ok(response);
+        }
+
+        [Route("filter")]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Person>>> GetFiltered
+        ([FromQuery(Name = "pf")] PersonProperties property,
+            [FromQuery(Name = "value")] string value)
+        {
+            var response =
+                await Task.Run(() => _people.GetFilteredPeople(property, value, true));
             return Ok(response);
         }
 
         [HttpGet]
-        public async Task<ActionResult<Person>> GetAll([FromQuery(Name = "prop")] PersonProperties property, [FromQuery(Name = "desc")] bool desc)
+        public async Task<ActionResult<IEnumerable<Person>>> GetAll(
+            [FromQuery(Name = "ps")] PersonProperties property,
+            [FromQuery(Name = "desc")] bool desc)
         {
             var response = await Task.Run(() => _people.GetOrderedList(property, desc));
             return Ok(response);
@@ -76,7 +79,7 @@ namespace ZodiacBack.Controllers
             if (response.ErrorMessages.Any()) return BadRequest(response.ErrorMessages);
             return Ok(response);
         }
-        
+
         [HttpPut]
         public async Task<ActionResult<PersonResponse>> Put([FromBody] Person person)
         {
