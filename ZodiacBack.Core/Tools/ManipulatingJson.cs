@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using Newtonsoft.Json;
+using ZodiacBack.Core.Models;
 
 namespace ZodiacBack.Core.Tools
 {
@@ -11,6 +13,10 @@ namespace ZodiacBack.Core.Tools
         public ManipulatingJson(string filePath)
         {
             FilePath = filePath;
+            if (!File.Exists(FilePath))
+            {
+                Write(new List<Person>());
+            }
         }
 
         public T Read<T>()

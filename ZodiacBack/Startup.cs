@@ -20,9 +20,9 @@ namespace ZodiacBack
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            
+
             services.AddSingleton<People>();
-            
+
             // services.AddCors();
             services.AddCors(options =>
             {
