@@ -52,5 +52,13 @@ namespace ZodiacBack.Core.Models
         public Person()
         {
         }
+
+        public void RefreshAgeStatistics()
+        {
+            var ageStatistics = new AgeStatistics(Birthday);
+            IsBirthday = ageStatistics.IsBirthday;
+            IsAdult = ageStatistics.IsAdult;
+            Age = ageStatistics.Age;
+        }
     }
 }

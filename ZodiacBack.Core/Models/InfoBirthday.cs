@@ -6,46 +6,29 @@ namespace ZodiacBack.Core.Models
     {
         private DateTime BirthdayDate { get; }
 
+        private AgeStatistics AgeStatistics { get; }
+
         public string WestSign => CalculateWestSign();
 
         public string EastSign => CalculateEastSign();
 
-        public bool IsBirthday => CheckIfBirthday();
+        public bool IsBirthday => AgeStatistics.IsBirthday;
 
-        public bool IsAdult => CheckIfAdult();
+        public bool IsAdult => AgeStatistics.IsAdult;
 
-        public int Age => CalculateAge();
+        public int Age => AgeStatistics.Age;
 
         public InfoBirthday(DateTime birthday)
         {
             BirthdayDate = birthday;
+            AgeStatistics = new AgeStatistics(BirthdayDate);
         }
 
         public bool IsFromFuture()
         {
-            var now = int.Parse(DateTime.Now.ToString("yyyyMMdd"));
-            var dob = int.Parse(BirthdayDate.ToString("yyyyMMdd"));
-            return now - dob < 0;
+            return AgeStatistics.IsFromFuture();
         }
         
-        private int CalculateAge()
-        {
-            var now = int.Parse(DateTime.Now.ToString("yyyyMMdd"));
-            var dob = int.Parse(BirthdayDate.ToString("yyyyMMdd"));
-            return (now - dob) / 10000;
-        }
-
-        private bool CheckIfBirthday()
-        {
-            DateTime now = DateTime.Now;
-            return BirthdayDate.Day == now.Day && BirthdayDate.Month == now.Month;
-        }
-        
-        private bool CheckIfAdult()
-        {
-            return Age >= 18 ? true : false;
-        }
-
         private string CalculateEastSign()
         {
             var year = BirthdayDate.Year;

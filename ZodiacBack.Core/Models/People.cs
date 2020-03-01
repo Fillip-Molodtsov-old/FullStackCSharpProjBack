@@ -22,6 +22,7 @@ namespace ZodiacBack.Core.Models
                 "ZodiacBack.Core\\Assets\\Data.json");
             _manipulatingJson = new ManipulatingJson(pathToData);
             _peopleList = _manipulatingJson.Read<List<Person>>();
+            _peopleList.ForEach(p => p.RefreshAgeStatistics());
         }
 
         public IEnumerable<Person> GetOrderedList(PersonProperties propertyToSort,
@@ -50,7 +51,7 @@ namespace ZodiacBack.Core.Models
         public IEnumerable<Person> GetFilteredPeople(PersonProperties property, string value, bool isJustFilter)
         {
             var list =  _peopleList
-                .Where(p => (ReturnPropertyValue(p, property).ToString()).ToLower().Contains(value.ToLower()));
+                .Where(p => ReturnStringPropertyValue(p, property).ToLower().Contains(value.ToLower()));
 
             return !isJustFilter ? list : list.OrderBy(p => p.Surname);
         }
@@ -93,10 +94,21 @@ namespace ZodiacBack.Core.Models
 
         public void SaveData()
         {
+            _peopleList.ForEach(p => p.RefreshAgeStatistics());
             _manipulatingJson.Write(_peopleList);
         }
 
-        private dynamic ReturnPropertyValue(Person person, PersonProperties property)
+        private static string ReturnStringPropertyValue(Person person, PersonProperties property)
+        {
+            var value = ReturnPropertyValue(person, property);
+            return property switch
+            {
+                PersonProperties.Birthday => value.ToString("o"),
+                _ => value.ToString()
+            };
+        }
+        
+        private static dynamic ReturnPropertyValue(Person person, PersonProperties property)
         {
             return property switch
             {
