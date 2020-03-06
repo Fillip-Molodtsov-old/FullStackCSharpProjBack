@@ -23,6 +23,8 @@ namespace ZodiacBack
 
             services.AddSingleton<People>();
 
+            services.AddSingleton<CustomProcesses>();
+
             // services.AddCors();
             services.AddCors(options =>
             {

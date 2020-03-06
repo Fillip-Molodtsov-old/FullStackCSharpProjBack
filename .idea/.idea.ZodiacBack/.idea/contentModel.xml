@@ -21,6 +21,7 @@
         <e p="bin" t="ExcludeRecursive" />
         <e p="Controllers" t="Include">
           <e p="PersonController.cs" t="Include" />
+          <e p="ProcessesController.cs" t="Include" />
           <e p="Zodiac.cs" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive">
@@ -56,6 +57,10 @@
         </e>
         <e p="Models" t="Include">
           <e p="AgeStatistics.cs" t="Include" />
+          <e p="CustomProcess.cs" t="Include" />
+          <e p="CustomProcesses.cs" t="Include" />
+          <e p="CustomProcessModule.cs" t="Include" />
+          <e p="CustomProcessThreads.cs" t="Include" />
           <e p="InfoBirthday.cs" t="Include" />
           <e p="People.cs" t="Include" />
           <e p="Person.cs" t="Include" />
