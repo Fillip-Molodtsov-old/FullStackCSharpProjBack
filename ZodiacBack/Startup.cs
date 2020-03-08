@@ -22,7 +22,7 @@ namespace ZodiacBack
             services.AddControllers();
 
             services.AddSingleton<People>();
-
+            
             services.AddSingleton<CustomProcesses>();
 
             // services.AddCors();
@@ -44,6 +44,8 @@ namespace ZodiacBack
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.ApplicationServices.GetService<CustomProcesses>(); // to initiate singleton right now
             
             // app.UseCors(builder => builder.AllowAnyOrigin());
             app.UseCors("CorsPolicy");

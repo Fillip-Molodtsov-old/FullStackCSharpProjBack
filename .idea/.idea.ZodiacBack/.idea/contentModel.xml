@@ -63,6 +63,7 @@
           <e p="CustomProcessThreads.cs" t="Include" />
           <e p="InfoBirthday.cs" t="Include" />
           <e p="People.cs" t="Include" />
+          <e p="PerformanceCounterWrapper.cs" t="Include" />
           <e p="Person.cs" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive">

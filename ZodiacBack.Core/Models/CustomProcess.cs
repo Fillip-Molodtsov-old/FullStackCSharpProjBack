@@ -9,7 +9,7 @@ namespace ZodiacBack.Core.Models
         public int Id { get; set; }
         public bool IsResponding { get; set; }
         public double Cpu { get; set; }
-        public long  Gpu { get; set; }
+        public double  Gpu { get; set; }
         public string Username { get; set; }
         public DateTime StartTime { get; set; }
         public string PathToFile { get; set; }

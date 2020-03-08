@@ -22,9 +22,9 @@ namespace ZodiacBack.Controllers
         
         
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Person>>> Get()
+        public async Task<ActionResult<IEnumerable<CustomProcess>>> Get()
         {
-            var response = await Task.Run(() => _processes.RefreshProcesses());
+            var response = await Task.Run(() => _processes.GetResponseProcesses());
             return Ok(response);
         }
     }
