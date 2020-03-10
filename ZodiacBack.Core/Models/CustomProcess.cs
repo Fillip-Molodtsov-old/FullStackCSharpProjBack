@@ -13,7 +13,7 @@ namespace ZodiacBack.Core.Models
         public string Username { get; set; }
         public DateTime StartTime { get; set; }
         public string PathToFile { get; set; }
-        public int ThreadsCount => Threads.Count;
+        public int ThreadsCount { get; set; }
 
         public List<CustomProcessModule> Modules { get; }
         public List<CustomProcessThreads> Threads { get; }

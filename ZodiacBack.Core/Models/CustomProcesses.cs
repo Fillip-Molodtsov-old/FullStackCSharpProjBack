@@ -3,64 +3,88 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using ZodiacBack.Core.Enums;
 
 namespace ZodiacBack.Core.Models
 {
     public class CustomProcesses
     {
         private ConcurrentBag<PerformanceCounterWrapper> _performanceCounters;
+        private ConcurrentBag<PerformanceCounterWrapper> _performanceCountersReadOnly;
         private readonly List<CustomProcess> _processes;
         private static readonly IntPtr WtsCurrentServerHandle = IntPtr.Zero;
         private const int WtsUserName = 5;
         private static readonly object Locker = new object();
-        private static long RamKb;
+        private static long _ramKb;
 
         public CustomProcesses()
         {
-            GetPhysicallyInstalledSystemMemory(out RamKb);
+            GetPhysicallyInstalledSystemMemory(out _ramKb);
             _processes = new List<CustomProcess>();
-            var task = Task.Run(() =>
-            {
-                while (true)
-                {
-                    var processes = Process.GetProcesses();
-                    _performanceCounters = new ConcurrentBag<PerformanceCounterWrapper>(processes
-                        .AsParallel()
-                        .AsOrdered()
-                        .Select(proc =>
-                        {
-                            var pcProcess =
-                                new PerformanceCounter("Process",
-                                    "% Processor Time", proc.ProcessName);
-                            return new PerformanceCounterWrapper()
-                            {
-                                Id = proc.Id,
-                                Next = pcProcess.NextValue(),
-                                PerformanceCounter = pcProcess
-                            };
-                        }));
-                    Thread.Sleep(2000);
-                    RenewCpuStats();
-                    Thread.Sleep(2000);
-                    RenewCpuStats();
-                    Thread.Sleep(5000);
-                }
-            });
+            _performanceCounters = new ConcurrentBag<PerformanceCounterWrapper>();
+            _performanceCountersReadOnly = new ConcurrentBag<PerformanceCounterWrapper>();
+            Task.Run(LoopTask);
+        }
+        
+        public IEnumerable<string> GetProperties()
+        {
+            return Enum
+                .GetValues(typeof(ProcessProperties))
+                .Cast<ProcessProperties>()
+                .Select(e => e.ToString())
+                .ToList();
         }
 
-        public IEnumerable<CustomProcess> GetResponseProcesses()
+        public static void OpenDirectory(string path)
         {
-            return GetCustomProcesses();
+            Process.Start("explorer.exe" , Path.GetDirectoryName(path));
+        }
+
+        public static void KillProcess(int id)
+        {
+            Process.GetProcessById(id).Kill();
+        }
+
+        public CustomProcess GetAddInfo(int id)
+        {
+            try
+            {
+                FillNewCustomProcess(out var customProcess, Process.GetProcessById(id), true);
+                return customProcess;
+            }
+            catch (ArgumentException)
+            { }
+            catch (InvalidOperationException)
+            { }
+
+            return null;
+        }
+
+        public IEnumerable<CustomProcess> GetResponseProcesses(ProcessProperties property, bool desc)
+        {
+            var processes = GetCustomProcesses();
+            Func<CustomProcess, dynamic> func = p => ReturnPropertyValue(p, property);
+            return desc ? processes.OrderByDescending(func) : processes.OrderBy(func);
         }
 
         private void RenewCpuStats()
         {
             Parallel.ForEach(_performanceCounters,
-                pc => pc.Next = pc.PerformanceCounter.NextValue());
+                    pc => pc.Next = pc.PerformanceCounter.NextValue());
+
+        }
+
+        private void UpdateReadOnlyPerformanceCounter()
+        {
+            lock (Locker)
+            {
+                _performanceCountersReadOnly = _performanceCounters;
+            }
         }
 
         private List<CustomProcess> GetCustomProcesses()
@@ -72,11 +96,8 @@ namespace ZodiacBack.Core.Models
                 p.Refresh();
                 try
                 {
-                    lock (Locker)
-                    {
-                        FillNewCustomProcess(out var customProcess, p, false);
+                    FillNewCustomProcess(out var customProcess, p, false);
                         _processes.Add(customProcess);
-                    }
                 }
                 catch (Win32Exception)
                 {
@@ -85,27 +106,41 @@ namespace ZodiacBack.Core.Models
                 {
                 }
             }
-
-            ;
-
+            
             return _processes;
         }
 
         private void FillNewCustomProcess(out CustomProcess customProcess, Process p, bool addInfo)
         {
-            var nextValue = _performanceCounters
-                .ToList().Find(pc => pc.Id == p.Id).Next;
+            var nextValue = 0f;
+            lock (Locker)
+            {
+                nextValue = _performanceCountersReadOnly
+                    .ToList().Find(pc => pc.Id == p.Id).Next;
+            }
             customProcess = new CustomProcess()
             {
                 Name = p.ProcessName,
                 Id = p.Id,
                 IsResponding = p.Responding,
                 Cpu = Math.Round(nextValue, 2),
-                Gpu = Math.Round(p.WorkingSet64 / (10.24 * RamKb), 2),
+                Gpu = Math.Round(p.WorkingSet64 / (10.24 * _ramKb), 2),
                 StartTime = p.StartTime,
                 PathToFile = p.MainModule?.FileName,
                 Username = GetUserName(p)
             };
+            
+            foreach (ProcessThread thread in p.Threads)
+            {
+                customProcess.ThreadsCount++;
+                if (!addInfo) continue;
+                customProcess.Threads.Add(new CustomProcessThreads()
+                {
+                    Id = thread.Id,
+                    StartTime = thread.StartTime,
+                    State = thread.ThreadState.ToString()
+                });
+            }
 
             if (!addInfo) return;
 
@@ -115,16 +150,6 @@ namespace ZodiacBack.Core.Models
                 {
                     Name = module.ModuleName,
                     Path = module.FileName
-                });
-            }
-
-            foreach (ProcessThread thread in p.Threads)
-            {
-                customProcess.Threads.Add(new CustomProcessThreads()
-                {
-                    Id = thread.Id,
-                    StartTime = thread.StartTime,
-                    State = thread.ThreadState.ToString()
                 });
             }
         }
@@ -144,6 +169,53 @@ namespace ZodiacBack.Core.Models
             }
 
             return null;
+        }
+
+        private void LoopTask()
+        {
+            while (true)
+            {
+                var processes = Process.GetProcesses();
+                _performanceCounters = new ConcurrentBag<PerformanceCounterWrapper>(processes
+                        .AsParallel()
+                        .AsOrdered()
+                        .Select(proc =>
+                        {
+                            var pcProcess =
+                                new PerformanceCounter("Process",
+                                    "% Processor Time", proc.ProcessName);
+                            return new PerformanceCounterWrapper()
+                            {
+                                Id = proc.Id,
+                                Next = pcProcess.NextValue(),
+                                PerformanceCounter = pcProcess
+                            };
+                        }));
+                UpdateReadOnlyPerformanceCounter();
+                Thread.Sleep(2000);
+                RenewCpuStats();
+                UpdateReadOnlyPerformanceCounter();
+                Thread.Sleep(2000);
+                RenewCpuStats();
+                UpdateReadOnlyPerformanceCounter();
+            }
+        }
+        
+        private static dynamic ReturnPropertyValue(CustomProcess process, ProcessProperties property)
+        {
+            return property switch
+            {
+                ProcessProperties.Name => process.Name,
+                ProcessProperties.Id => process.Id,
+                ProcessProperties.IsResponding => process.IsResponding,
+                ProcessProperties.Cpu => process.Cpu,
+                ProcessProperties.Gpu => process.Gpu,
+                ProcessProperties.Username => process.Username,
+                ProcessProperties.StartTime => process.StartTime,
+                ProcessProperties.PathToFile => process.PathToFile,
+                ProcessProperties.ThreadsCount => process.ThreadsCount,
+                _ => process.Name
+            };
         }
 
         [DllImport("Wtsapi32.dll")] // for getting username

@@ -50,6 +50,7 @@
         </e>
         <e p="Enums" t="Include">
           <e p="PersonProperties.cs" t="Include" />
+          <e p="ProcessProperties.cs" t="Include" />
         </e>
         <e p="Exceptions" t="Include">
           <e p="AgeValidationException.cs" t="Include" />
@@ -62,6 +63,7 @@
           <e p="CustomProcessModule.cs" t="Include" />
           <e p="CustomProcessThreads.cs" t="Include" />
           <e p="InfoBirthday.cs" t="Include" />
+          <e p="PathWrapperObject.cs" t="Include" />
           <e p="People.cs" t="Include" />
           <e p="PerformanceCounterWrapper.cs" t="Include" />
           <e p="Person.cs" t="Include" />
