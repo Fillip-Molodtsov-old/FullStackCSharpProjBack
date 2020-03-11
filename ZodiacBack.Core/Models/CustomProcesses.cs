@@ -105,6 +105,10 @@ namespace ZodiacBack.Core.Models
                 catch (InvalidOperationException)
                 {
                 }
+                catch(ArgumentNullException)
+                {}
+                catch(NullReferenceException)
+                {}
             }
             
             return _processes;

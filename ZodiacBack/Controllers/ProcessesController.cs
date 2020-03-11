@@ -21,6 +21,13 @@ namespace ZodiacBack.Controllers
             _processes = processes;
         }
         
+        [Route("prop")]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<string>>> GetProperties()
+        {
+            var response = await Task.Run(() => _processes.GetProperties());
+            return Ok(response);
+        }
         
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CustomProcess>>>
@@ -52,7 +59,7 @@ namespace ZodiacBack.Controllers
         public async Task<ActionResult<int>> OpenDirectory([FromBody] PathWrapperObject path)
         {
             await Task.Run(() => CustomProcesses.OpenDirectory(path.Path));
-            return Ok(0);
+            return Ok();
         }
     }
 }
